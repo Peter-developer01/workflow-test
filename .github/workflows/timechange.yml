@@ -16,7 +16,7 @@ on:
       - "timechange.py"
   
 jobs:
-  run_flask:
+  run_changes:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository # Checkout the repo.
