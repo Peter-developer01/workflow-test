@@ -1,0 +1,40 @@
+name: CI-CD
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 */1 * * *"
+  push:
+    paths:
+      - "timechange.py"
+  
+jobs:
+  run_flask:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository # Checkout the repo.
+        uses: actions/checkout@v3.5.3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Run time update
+        run: python3 timechange.py
+          
+      - name: Commit changes
+        run: |
+          git config --global user.name "$username"
+          git config --global user.email "$email"
+          git add -A
+          git pull
+          git commit -m "GitHub Actions auto-commit: update time in README"
+          git push
+        env:
+          username: "Peter-developer01"
+          email: "101456132+Peter-developer01@users.noreply.github.com"
